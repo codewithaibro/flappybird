@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags for Flappy Bird Game -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Flappy Bird Game, Online Flappy Bird, Play Flappy Bird, Flappy Bird HTML CSS JavaScript, Flappy Bird Web Game, Fun Bird Game, Tap Game Online, Endless Bird Game">
+    <meta name="description" content="Play the classic Flappy Bird game online for free! Tap to fly and avoid the pipes. Built with HTML, CSS, and JavaScript. Enjoy a smooth, responsive gaming experience.">
+    <meta name="author" content="Flappy Bird">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#00c3ff">
+    <link rel="icon" href="https://res.cloudinary.com/dffy0z3nd/image/upload/v1749827735/favicon_nau6p2.ico" type="image/png">
+    <!-- Advanced SEO Meta Tags -->
+    <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <title>Play Flappy Bird Game Online | Fun Tap Game</title>
+    <style>
+        /* --- 🎨 Global Styles & CSS Variables --- */
+        :root {
+            --primary-color: #4ECDC4;
+            --secondary-color: #FF6B6B;
+            --background-color: #F7FFF7;
+            --dark-color: #292F36;
+            --text-light: #FFFFFF;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- 🔝 Top Header & Navigation --- */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: var(--dark-color);
+            color: var(--text-light);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo { font-size: 1.8rem; font-weight: bold; }
+        .top-nav { display: flex; gap: 1.5rem; }
+
+        .nav-tab {
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-tab:hover { color: var(--primary-color); }
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* --- 💻 Main Content & Sections --- */
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-section {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 🐦 Game Section --- */
+        #game-section {
+            text-align: center;
+        }
+
+        /* Canvas Styling */
+        #gameCanvas {
+            background-color: #87CEEB; /* Fallback sky color */
+            border: 3px solid var(--dark-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .game-info {
+            margin-top: 1rem;
+        }
+
+        /* --- 🏆 Leaderboard & About Sections --- */
+        .leaderboard-card, .static-content-card {
+            background-color: var(--text-light);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .leaderboard-card h2, .static-content-card h2 { text-align: center; margin-bottom: 1.5rem; }
+
+        .leaderboard-table { width: 100%; border-collapse: collapse; }
+        .leaderboard-table th, .leaderboard-table td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid #ddd; }
+        .leaderboard-table th { background-color: #f2f2f2; }
+        .leaderboard-table tr:last-child td { border-bottom: none; }
+        .leaderboard-table td:nth-child(2) { font-weight: bold; text-align: right; }
+
+        #about-section .static-content-card {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        /* --- 🌐 Social Sharing --- */
+        .social-sharing { margin-top: 2rem; text-align: center; }
+        .social-sharing h3 { margin-bottom: 1rem; }
+        .social-buttons a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .social-buttons a:hover { transform: scale(1.1); }
+        .facebook { background-color: #3b5998; }
+        .twitter { background-color: #1da1f2; }
+        .whatsapp { background-color: #25d366; }
+
+        /* --- 📲 Bottom Navigation (Sticky) --- */
+        .bottom-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--dark-color);
+            display: none;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        .bottom-nav-bar .nav-tab { color: var(--text-light); padding: 0.5rem; border: none; }
+        .bottom-nav-bar .nav-tab.active { color: var(--primary-color); transform: scale(1.1); }
+
+        /* --- 📱 Media Queries for Responsiveness --- */
+        @media (max-width: 768px) {
+            .top-nav { display: none; }
+            .bottom-nav-bar { display: flex; }
+            main { padding: 1rem; padding-bottom: 80px; }
+            #gameCanvas {
+              width: 100%;
+              height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo">Flappy Bird</div>
+        <nav class="top-nav">
+            <span class="nav-tab" data-tab="game-section">Game</span>
+            <span class="nav-tab" data-tab="leaderboard-section">Leaderboard</span>
+            <span class="nav-tab" data-tab="about-section">About</span>
+        </nav>
+    </header>
+
+    <main>
+        <section id="game-section" class="content-section">
+            <h1>Play the Classic Flappy Bird Game</h1>
+            <!-- The game will be rendered inside this canvas -->
+            <canvas id="gameCanvas"></canvas>
+            
+            <div class="game-info">
+                 <!-- This button is now hidden, game starts on click/key press -->
+                <button id="start-button" style="display: none;">Start Game</button>
+            </div>
+
+            <div class="social-sharing">
+                <h3>Share Your Score!</h3>
+                <div class="social-buttons">
+                    <a id="share-facebook" href="https://www.facebook.com/" target="_blank" class="facebook">Facebook</a>
+                    <a id="share-twitter" href="https://x.com/" target="_blank" class="twitter">Twitter</a>
+                    <a id="share-whatsapp" href="https://web.whatsapp.com/" target="_blank" class="whatsapp">WhatsApp</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="leaderboard-section" class="content-section">
+            <div class="leaderboard-card">
+                <h2>🏆 Top Players 🏆</h2>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr><th>Player</th><th>Score</th></tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <tr><td colspan="2">No scores yet. Play a game!</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="about-section" class="content-section">
+            <div class="static-content-card">
+                <h2>About This Game</h2>
+                <p>Flappy Bird is a simple yet highly addictive arcade-style game where you help a small bird fly through a series of pipes without hitting them. Just tap the screen or press the spacebar to keep the bird in the air. The game gets more challenging as you progress, testing your reflexes and concentration. Get ready to chase your high score and enjoy hours of fun!</p>
+            </div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav-bar">
+        <span class="nav-tab" data-tab="game-section">Game</span>
+        <span class="nav-tab" data-tab="leaderboard-section">Scores</span>
+        <span class="nav-tab" data-tab="about-section">About</span>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // ===================================
+            // ⚙️ UI & TAB NAVIGATION LOGIC
+            // ===================================
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            function switchTab(targetId) {
+                contentSections.forEach(section => section.classList.remove('active'));
+                tabs.forEach(tab => tab.classList.remove('active'));
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) targetSection.classList.add('active');
+                const activeTabs = document.querySelectorAll(`.nav-tab[data-tab="${targetId}"]`);
+                activeTabs.forEach(tab => tab.classList.add('active'));
+                if (targetId === 'leaderboard-section') updateLeaderboardDisplay();
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const targetId = e.target.getAttribute('data-tab');
+                    if (targetId) switchTab(targetId);
+                });
+            });
+
+            switchTab('game-section');
+
+            // ===================================
+            // 🏆 LEADERBOARD & SHARING LOGIC
+            // ===================================
+            function getScores() { return JSON.parse(localStorage.getItem('flappyScoresCanvas')) || []; }
+
+            function saveScore(newScore) {
+                if (newScore === 0) return;
+                const scores = getScores();
+                const playerName = prompt(`Game Over! Your score: ${newScore}\nEnter your name for the leaderboard:`, "Player");
+                if (playerName) {
+                    scores.push({ name: playerName, score: newScore });
+                    scores.sort((a, b) => b.score - a.score);
+                    localStorage.setItem('flappyScoresCanvas', JSON.stringify(scores.slice(0, 10)));
+                }
+            }
+
+            function updateLeaderboardDisplay() {
+                const scores = getScores();
+                const leaderboardBody = document.getElementById('leaderboard-body');
+                leaderboardBody.innerHTML = '';
+                if (scores.length === 0) {
+                    leaderboardBody.innerHTML = '<tr><td colspan="2">No scores yet. Play a game!</td></tr>';
+                } else {
+                    scores.forEach(entry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${entry.name}</td><td>${entry.score}</td>`;
+                        leaderboardBody.appendChild(row);
+                    });
+                }
+            }
+
+            function updateShareLinks(score) {
+                const text = `I scored ${score} in this Flappy Bird game! Can you beat it?`;
+                const url = window.location.href;
+                document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+                document.getElementById('share-whatsapp').href = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
+                document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            }
+                // ===================================
+                // 🐦 CANVAS FLAPPY BIRD GAME LOGIC
+                // ===================================
+                const canvasGame = {
+                    canvas: document.getElementById('gameCanvas'),
+                    ctx: null,
+                    screenFrame: 0,
+                    RAD: Math.PI / 180,
+                    state: {
+                        gameActive: true,
+                        gamePlaying: false,
+                    },
+                    bird: {
+                        frames: 0,
+                        position: { x: 60, y: 150 },
+                        speed: 0,
+                        gravity: 0.125,
+                        thrust: 2.6,
+                        rotation: 0,
+                        animation: [{ img: new Image() }, { img: new Image() }, { img: new Image() }],
+                    },
+                    background: { img: new Image(), position: { x: 0, y: 0 } },
+                    ground: { img: new Image(), position: { x: 0, y: 0 }, dx: 2 },
+                    pipe: {
+                        top: { img: new Image() },
+                        bottom: { img: new Image() },
+                        list: [],
+                        gap: 85,
+                        move: true,
+                    },
+                    ui: {
+                        frames: 0,
+                        start: { img: new Image() },
+                        over: { img: new Image() },
+                        tap: [{ img: new Image() }, { img: new Image() }],
+                        score: { current: 0, best: 0 },
+                    },
+                    sfx: {
+                        start: new Audio(), flap: new Audio(), score: new Audio(),
+                        hit: new Audio(), bg: new Audio(),
+                    },
+
+                    init() {
+                        this.ctx = this.canvas.getContext('2d');
+                        this.canvas.width = 320;
+                        this.canvas.height = 480;
+                        this.loadAssets();
+                        this.setupControls();
+                        this.loop();
+                    },
+                    
+                    loadAssets() {
+                        // IMPORTANT: An 'assets' folder must exist with this structure
+                        this.bird.animation[0].img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782562/1_brid_lbd9np.png";
+                        this.bird.animation[1].img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782563/2_brid_qveucz.png";
+                        this.bird.animation[2].img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782564/3_brid_ffk0ot.png";
+                        this.background.img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782564/background_mjzwxq.png";
+                        this.ground.img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782563/1_ground_akuh6i.png";
+                        this.pipe.top.img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782565/toppipe_bzhqjq.png";
+                        this.pipe.bottom.img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782564/botpipe_butftg.png";
+                        this.ui.start.img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782688/getready_qk5zrf.png";
+                        this.ui.over.img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782688/gameOver_gayxey.png";
+                        this.ui.tap[0].img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782688/1_tap_m96vos.png";
+                        this.ui.tap[1].img.src = "https://res.cloudinary.com/dffy0z3nd/image/upload/v1749782688/2_tap_tkiiue.png";
+
+                        this.sfx.start.src = "https://res.cloudinary.com/dffy0z3nd/video/upload/v1749782563/start_yjpxeg.wav";
+                        this.sfx.flap.src = "https://res.cloudinary.com/dffy0z3nd/video/upload/v1749782561/flap_pkuc2x.wav";
+                        this.sfx.score.src = "https://res.cloudinary.com/dffy0z3nd/video/upload/v1749782562/score_ujfa5y.wav";
+                        this.sfx.hit.src = "https://res.cloudinary.com/dffy0z3nd/video/upload/v1749782562/hit_j6u17l.wav";
+                        this.sfx.bg.src = "https://res.cloudinary.com/dffy0z3nd/video/upload/v1749782564/bg_op3jom.mp3";
+
+                        Object.values(this.sfx).forEach(s => s.volume = 0.2);
+                        this.sfx.bg.loop = true;
+                    },
+
+                    setupControls() {
+                        const handleAction = () => {
+                            if (this.state.gameActive) { // Start the game
+                                this.state.gameActive = false;
+                                this.state.gamePlaying = true;
+                                this.pipe.list = [];
+                                this.ui.score.current = 0; // FIX: Reset score
+                                this.bird.position.y = 150; // FIX: Reset bird's starting position
+                                this.bird.rotation = 0;     // FIX: Reset bird's rotation
+                                this.bird.speed = -this.bird.thrust; // Initial flap
+                                this.sfx.bg.play();
+                            } else if (this.state.gamePlaying) { // Flap during game
+                                this.bird.speed = -this.bird.thrust;
+                                this.sfx.flap.play();
+                            } else { // Reset the game after game over
+                                this.pipe.list = [];
+                                this.bird.rotation = 0;
+                                this.bird.position.y = 150;
+                                this.bird.speed = 0;
+                                this.ui.score.current = 0;
+                                this.state.gameActive = true;
+                            }
+                        };
+                        this.canvas.addEventListener('click', handleAction);
+                        window.addEventListener('keydown', (e) => {
+                            if (e.code === "Space" || e.code === "ArrowUp") handleAction();
+                        });
+                    },
+                    
+                    draw() {
+                        this.ctx.fillStyle = "#87CEEB";
+                        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                        // Draw background
+                        this.ctx.drawImage(this.background.img, 0, this.canvas.height - this.background.img.height);
+                        // Draw pipes
+                        for(let p of this.pipe.list) {
+                            this.ctx.drawImage(this.pipe.top.img, p.x, p.y);
+                            this.ctx.drawImage(this.pipe.bottom.img, p.x, p.y + this.pipe.top.img.height + this.pipe.gap);
+                        }
+                        // Draw ground
+                        this.ctx.drawImage(this.ground.img, this.ground.position.x, this.canvas.height - this.ground.img.height);
+                        // Draw bird
+                        this.ctx.save();
+                        this.ctx.translate(this.bird.position.x, this.bird.position.y);
+                        this.ctx.rotate(this.bird.rotation * this.RAD);
+                        const currentBirdImg = this.bird.animation[this.bird.frames].img;
+                        this.ctx.drawImage(currentBirdImg, -currentBirdImg.width / 2, -currentBirdImg.height / 2);
+                        this.ctx.restore();
+                        // Draw UI
+                        this.drawUI();
+                    },
+                    
+                    drawUI() {
+                        this.ctx.fillStyle = "#FFF";
+                        this.ctx.strokeStyle = "#000";
+                        this.ctx.lineWidth = 2;
+                        this.ctx.font = "25px 'Segoe UI', sans-serif";
+                        
+                        if (this.state.gameActive) {
+                            this.ctx.drawImage(this.ui.start.img, (this.canvas.width - this.ui.start.img.width) / 2, 80);
+                            this.ctx.drawImage(this.ui.tap[this.ui.frames].img, (this.canvas.width - this.ui.tap[0].img.width) / 2, 220);
+                        } else if (!this.state.gamePlaying) {
+                            this.ctx.drawImage(this.ui.over.img, (this.canvas.width - this.ui.over.img.width) / 2, 80);
+                            const scoreText = `Score: ${this.ui.score.current}`;
+                            const bestText = `Best: ${this.ui.score.best}`;
+                            this.ctx.fillText(scoreText, (this.canvas.width - this.ctx.measureText(scoreText).width) / 2, 180);
+                            this.ctx.strokeText(scoreText, (this.canvas.width - this.ctx.measureText(scoreText).width) / 2, 180);
+                            this.ctx.fillText(bestText, (this.canvas.width - this.ctx.measureText(bestText).width) / 2, 220);
+                            this.ctx.strokeText(bestText, (this.canvas.width - this.ctx.measureText(bestText).width) / 2, 220);
+                        } else {
+                            this.ctx.fillText(this.ui.score.current, this.canvas.width / 2, 50);
+                            this.ctx.strokeText(this.ui.score.current, this.canvas.width / 2, 50);
+                        }
+                    },
+                    
+                    update() {
+                        // Bird animation
+                        this.bird.frames += (this.screenFrame % 10 == 0) ? 1 : 0;
+                        this.bird.frames %= this.bird.animation.length;
+
+                        if(this.state.gameActive) {
+                            this.bird.position.y = 150 + 5 * Math.sin(this.screenFrame * this.RAD * 5);
+                            this.ground.position.x = (this.ground.position.x - this.ground.dx) % (this.ground.img.width / 2);
+                        } else if (this.state.gamePlaying) {
+                            // Bird physics
+                            this.bird.speed += this.bird.gravity;
+                            this.bird.position.y += this.bird.speed;
+                            // Bird rotation
+                            if(this.bird.speed >= this.bird.thrust) this.bird.rotation = 90;
+                            else this.bird.rotation = -25 * this.bird.speed / -this.bird.thrust;
+                            // Pipe management
+                            if(this.screenFrame % 100 == 0) {
+                                this.pipe.list.push({x: this.canvas.width, y: -150 * (Math.random() + 1)});
+                            }
+                            this.pipe.list.forEach(p => p.x -= this.ground.dx);
+                            if(this.pipe.list.length && this.pipe.list[0].x < -this.pipe.top.img.width) {
+                                this.pipe.list.shift();
+                                this.pipe.move = true;
+                            }
+                            // Score
+                            if(this.pipe.move && this.pipe.list.length && this.pipe.list[0].x < this.bird.position.x) {
+                                this.ui.score.current++;
+                                this.sfx.score.play();
+                                this.pipe.move = false;
+                            }
+                            // Ground movement
+                            this.ground.position.x = (this.ground.position.x - this.ground.dx) % (this.ground.img.width / 2);
+                            // Collision check
+                            this.checkCollision();
+                        } else { // Game Over, bird falls
+                            this.bird.rotation = 90;
+                            if(this.bird.position.y + this.bird.animation[0].img.height/2 < this.canvas.height - this.ground.img.height) {
+                                this.bird.position.y += this.bird.speed;
+                                this.bird.speed += this.bird.gravity;
+                            }
+                        }
+                        // UI tap animation
+                        this.ui.frames += (this.screenFrame % 20 == 0) ? 1 : 0;
+                        this.ui.frames %= this.ui.tap.length;
+                    },
+
+                    checkCollision() {
+                        // FIX: Use the current bird frame for collision detection, not always the first one.
+                        let bird = this.bird.animation[this.bird.frames].img;
+                        let birdRect = { x: this.bird.position.x - bird.width/2, y: this.bird.position.y - bird.height/2, width: bird.width, height: bird.height};
+                        
+                        // Ground collision
+                        if(birdRect.y + birdRect.height >= this.canvas.height - this.ground.img.height) this.endGame();
+                        
+                        // Pipe collision
+                        if(!this.pipe.list.length) return;
+                        let p = this.pipe.list[0];
+                        let pTop = {x: p.x, y: p.y, width: this.pipe.top.img.width, height: this.pipe.top.img.height};
+                        let pBottom = {x: p.x, y: p.y + pTop.height + this.pipe.gap, width: this.pipe.bottom.img.width, height: this.pipe.bottom.img.height};
+                        if(this.rectsOverlap(birdRect, pTop) || this.rectsOverlap(birdRect, pBottom)) this.endGame();
+                    },
+
+                    rectsOverlap(rect1, rect2) {
+                        return (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x &&
+                                rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y);
+                    },
+
+                    endGame() {
+                        if(!this.state.gamePlaying) return;
+                        this.sfx.hit.play();
+                        this.sfx.bg.pause();
+                        this.sfx.bg.currentTime = 0;
+                        this.state.gamePlaying = false;
+                        // Update best score and save
+                        this.ui.score.best = Math.max(this.ui.score.current, this.ui.score.best);
+                        saveScore(this.ui.score.current);
+                        updateShareLinks(this.ui.score.current);
+                    },
+
+                    loop: function() {
+                        this.update();
+                        this.draw();
+                        this.screenFrame++;
+                        requestAnimationFrame(() => this.loop());
+                    }
+                };
+
+            canvasGame.init();
+
+        });
+    </script>
+
+</body>
+</html>
